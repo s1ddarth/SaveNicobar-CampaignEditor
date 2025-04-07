@@ -389,7 +389,9 @@
             if (socialLinks.instagram) socialLinks.instagram.href = document.getElementById('instagram-link-input').value;
 
             // Update Buttons
-            const buttonsContainer = doc.querySelector('.link-button').parentNode;
+            const firstButton = doc.querySelector('.link-button'); 
+            const buttonsContainer = firstButton ? firstButton.parentNode : null;   // Check if buttons exist on the page
+
             if (buttonsContainer) {
                 // Remove existing buttons
                 doc.querySelectorAll('.link-button').forEach(btn => btn.remove());
@@ -411,6 +413,7 @@
                     }
                 });
             }
+            else console.warn('No buttons found. Skipping button update.');
 
             previewFrame.srcdoc = doc.documentElement.outerHTML;
 
