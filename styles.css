@@ -118,3 +118,38 @@ iframe {
 .add-btn:hover {
   background: #45a049;
 }
+
+.button-group {
+  position: relative;
+  padding: 8px;
+  margin: 5px 0;
+  background: #f8f8f8;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.button-group.dragging {
+  opacity: 0.5;
+  background: #e0e0e0;
+}
+
+.drag-handle {
+  cursor: move;
+  padding: 0 10px;
+  user-select: none;
+}
+
+.delete-btn {
+  background: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.delete-btn:hover {
+  background: #cc0000;
+}

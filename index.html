@@ -144,16 +144,64 @@
       function createButtonInputs(index) {
         const div = document.createElement("div");
         div.className = "button-group";
-        div.innerHTML = `
-                <input type="text" class="button-text" placeholder="Button ${index} Text">
-                <input type="url" class="button-link" placeholder="Button ${index} Link">
-            `;
+        div.draggable = true; // Make draggable
+        div.dataset.index = index; // Store original index
 
+        div.innerHTML = `
+        <span class="drag-handle">☰</span>
+        <input type="text" class="button-text" placeholder="Button ${index} Text">
+        <input type="url" class="button-link" placeholder="Button ${index} Link">
+        <button class="delete-btn" title="Delete button">×</button>`;
+
+        // Add event listeners
         div.querySelectorAll("input").forEach((input) => {
           input.addEventListener("input", updatePreview);
         });
 
+        // Add drag event listeners
+        div.addEventListener("dragstart", handleDragStart);
+        div.addEventListener("dragover", handleDragOver);
+        div.addEventListener("drop", handleDrop);
+        div.addEventListener("dragend", handleDragEnd);
+
+        // Add delete button listener
+        div.querySelector(".delete-btn").addEventListener("click", () => {
+          div.remove();
+          updatePreview();
+        });
+
         return div;
+      }
+
+      let draggedItem = null;
+
+      function handleDragStart(e) {
+        draggedItem = this;
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/html", this.innerHTML);
+        this.classList.add("dragging");
+      }
+
+      function handleDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        const boundingRect = this.getBoundingClientRect();
+        const offset = boundingRect.y + boundingRect.height / 2;
+        if (e.clientY < offset) {
+          this.parentNode.insertBefore(draggedItem, this);
+        } else {
+          this.parentNode.insertBefore(draggedItem, this.nextSibling);
+        }
+      }
+
+      function handleDrop(e) {
+        e.preventDefault();
+        return false;
+      }
+
+      function handleDragEnd() {
+        this.classList.remove("dragging");
+        updatePreview();
       }
 
       htmlFileInput.addEventListener("change", (event) => {
